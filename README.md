@@ -1,6 +1,6 @@
 # db-sharding-springboot-starter
 
-> 基于xhy-db-router-springboot-starter基础上实现简单的分库分表组件，支持yml配置文件指定路由策略（hash、mod）。
+> 基于xhy-db-router-springboot-starter基础上实现简单的分库分表组件，支持yml配置文件指定路由策略（hash、mod），支持自定义注解。
 >
 > 特别鸣谢：https://gitee.com/XhyQAQ
 
@@ -100,7 +100,7 @@ public class DataSourceAutoConfig implements EnvironmentAware {
         return new DBRouterJoinPoint(dbRouterConfig, dbRouterStrategy);
     }
     
-    ...
+    // ...
 }
 ```
 
@@ -147,7 +147,7 @@ DBContextHolder.setTBKey(String.format("%03d", tbIdx));
 
 #### 3. 待完成
 
-- [ ] 自定义路由规则
+- [ ] 自定义路由规则 - 2023-08-02 完成
 - [ ] 分库分表产生的数据库事务问题
 
 

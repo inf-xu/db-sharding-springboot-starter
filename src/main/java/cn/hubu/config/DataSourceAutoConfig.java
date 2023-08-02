@@ -11,6 +11,7 @@ import cn.hubu.strategy.impl.DBRouterStrategyMod;
 import cn.hubu.util.PropertyUtil;
 import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -129,22 +130,18 @@ public class DataSourceAutoConfig implements EnvironmentAware {
     }
 
 
-    /**
-     * 依赖注入
-     *
-     * @param dbRouterConfig
-     * @return
-     */
     @Bean
-    public IDBRouterStrategy dbRouterStrategy(DBRouterConfig dbRouterConfig) {
-        if (RouterStrategyEnum.HASH.getStrategy().equals(routerStrategy)) {
-            return new DBRouterStrategyHashCode(dbRouterConfig);
-        } else if (RouterStrategyEnum.MOD.getStrategy().equals(routerStrategy)) {
-            return new DBRouterStrategyMod(dbRouterConfig);
-        } else {
-            throw new RuntimeException("specify a correct routing policy");
-        }
+    @ConditionalOnProperty(prefix = "db-sharding.jdbc.datasource", name = "router-strategy", havingValue = "mod")
+    public IDBRouterStrategy modRouterStrategy(DBRouterConfig dbRouterConfig) {
+        return new DBRouterStrategyMod(dbRouterConfig);
     }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "db-sharding.jdbc.datasource", name = "router-strategy", havingValue = "hash")
+    public IDBRouterStrategy hashRouterStrategy(DBRouterConfig dbRouterConfig) {
+        return new DBRouterStrategyHashCode(dbRouterConfig);
+    }
+
 
 
     /**
